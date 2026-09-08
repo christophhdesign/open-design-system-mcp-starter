@@ -1,7 +1,7 @@
 # open-design-system-mcp-starter
 
 <p align="center">
-  <img src="docs/cursor.jpg" width="420" alt="Glowing cursor on a dark grainy background">
+  <img src="docs/cursor.jpg" width="100%" alt="Glowing cursor on a dark grainy background">
 </p>
 
 A system-agnostic MCP server template for a design system. Point it at your own catalog, tokens
