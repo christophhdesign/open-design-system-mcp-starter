@@ -1,5 +1,9 @@
 # open-design-system-mcp-starter
 
+<p align="center">
+  <img src="docs/cursor.jpg" width="420" alt="Glowing cursor on a dark grainy background">
+</p>
+
 A system-agnostic MCP server template for a design system. Point it at your own catalog, tokens
 and docs, and coding agents get a real API to ask instead of a memory to guess from: what
 components exist, what props they take, which token to write, whether a name they are about to
