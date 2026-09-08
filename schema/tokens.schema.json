@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ds-mcp-starter:schema:tokens",
+  "title": "SystemTokens",
+  "description": "Generated ground truth for one system's design tokens. Adapters produce this shape; the server reads only this shape.",
+  "type": "object",
+  "required": ["system", "generatedAt", "source", "tokens", "cssVars"],
+  "properties": {
+    "system": {
+      "type": "string",
+      "description": "System id, matching a key in ds.config.json's systems map."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "required": ["root", "files"],
+      "properties": {
+        "root": { "type": "string" },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "adapter": { "type": "string" },
+        "hash": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Token" }
+    },
+    "cssVars": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Kept for bench compatibility: every CSS var name."
+    },
+    "themes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Token": {
+      "type": "object",
+      "title": "Token",
+      "required": ["name", "category"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Canonical name: the CSS var ('--color-text-muted') or the DTCG path ('color.text.muted')."
+        },
+        "cssVar": {
+          "type": "string",
+          "description": "The CSS custom property to write, when one exists."
+        },
+        "value": {
+          "type": "string",
+          "description": "Resolved value in the default theme, as written."
+        },
+        "valuesByTheme": {
+          "type": "object",
+          "description": "Per-theme values when the source declares them (e.g. { light: '#111', dark: '#eee' }).",
+          "additionalProperties": { "type": "string" }
+        },
+        "category": { "$ref": "#/$defs/TokenCategory" },
+        "references": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Other tokens this one references (semantic layer), by canonical name."
+        },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "TokenCategory": {
+      "type": "string",
+      "title": "TokenCategory",
+      "enum": ["color", "space", "size", "typography", "radius", "shadow", "motion", "border", "opacity", "z-index", "other"]
+    }
+  }
+}

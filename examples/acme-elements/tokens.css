@@ -1,0 +1,81 @@
+/*
+ * Acme Elements tokens (fictional example system).
+ *
+ * Two layers: a base palette/scale layer that never changes with theme, and a
+ * semantic layer that references the base layer via var() and is overridden
+ * per theme. The dark theme is expressed two ways on purpose, so the
+ * css-vars adapter's detection is exercised: a class-based override
+ * ([data-theme="dark"]) and prefers-color-scheme as a fallback.
+ */
+
+:root {
+  /* Palette */
+  --acme-gray-0: #ffffff;
+  --acme-gray-100: #f4f6f8;
+  --acme-gray-300: #d6dde4;
+  --acme-gray-600: #5b6b7a;
+  --acme-gray-900: #18222c;
+
+  --acme-brand-500: #2563eb;
+  --acme-brand-600: #1d4ed8;
+
+  --acme-danger-500: #dc2626;
+  --acme-success-500: #16a34a;
+  --acme-warning-500: #d97706;
+
+  /* Space scale, 4px steps */
+  --acme-space-1: 4px;
+  --acme-space-2: 8px;
+  --acme-space-3: 12px;
+  --acme-space-4: 16px;
+  --acme-space-6: 24px;
+  --acme-space-8: 32px;
+
+  /* Radii */
+  --acme-radius-sm: 4px;
+  --acme-radius-md: 8px;
+  --acme-radius-lg: 16px;
+
+  /* Font sizes */
+  --acme-font-size-sm: 13px;
+  --acme-font-size-md: 15px;
+  --acme-font-size-lg: 19px;
+
+  /* Durations */
+  --acme-duration-fast: 120ms;
+  --acme-duration-slow: 240ms;
+
+  /* Semantic layer (light, the default theme) */
+  --acme-color-text-default: var(--acme-gray-900);
+  --acme-color-text-muted: var(--acme-gray-600);
+  --acme-color-surface-default: var(--acme-gray-0);
+  --acme-color-surface-sunken: var(--acme-gray-100);
+  --acme-color-border-default: var(--acme-gray-300);
+  --acme-color-accent-default: var(--acme-brand-500);
+  --acme-color-accent-emphasis: var(--acme-brand-600);
+  --acme-color-danger-default: var(--acme-danger-500);
+  --acme-color-success-default: var(--acme-success-500);
+  --acme-color-warning-default: var(--acme-warning-500);
+}
+
+[data-theme="dark"] {
+  --acme-color-text-default: var(--acme-gray-0);
+  --acme-color-text-muted: #98a5b1;
+  --acme-color-surface-default: #171f27;
+  --acme-color-surface-sunken: #11171d;
+  --acme-color-border-default: #2b3641;
+  --acme-color-accent-default: #4f8ef7;
+  --acme-color-accent-emphasis: #7fb0fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --acme-color-text-default: var(--acme-gray-0);
+    --acme-color-text-muted: #98a5b1;
+    --acme-color-surface-default: #171f27;
+    --acme-color-surface-sunken: #11171d;
+    --acme-color-border-default: #2b3641;
+    --acme-color-accent-default: #4f8ef7;
+    --acme-color-accent-emphasis: #7fb0fb;
+  }
+}

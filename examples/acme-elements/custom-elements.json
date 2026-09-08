@@ -1,0 +1,296 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A clickable control that triggers an action.",
+          "name": "AcmeButton",
+          "customElement": true,
+          "tagName": "acme-button",
+          "attributes": [
+            {
+              "name": "variant",
+              "type": { "text": "'primary' | 'secondary' | 'ghost'" },
+              "default": "'primary'",
+              "description": "Visual emphasis."
+            },
+            {
+              "name": "size",
+              "type": { "text": "'sm' | 'md' | 'lg'" },
+              "default": "'md'",
+              "description": "Control size."
+            },
+            {
+              "name": "disabled",
+              "type": { "text": "boolean" },
+              "default": "false",
+              "description": "Disables interaction and dims the control."
+            },
+            {
+              "name": "loading",
+              "type": { "text": "boolean" },
+              "default": "false",
+              "description": "Shows a spinner in place of the label and disables interaction."
+            },
+            {
+              "name": "type",
+              "type": { "text": "'primary' | 'secondary'" },
+              "description": "Old name for the emphasis axis.",
+              "deprecated": "Use variant instead."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "_pressedAt",
+              "type": { "text": "number | null" },
+              "privacy": "private",
+              "description": "Internal timestamp of the last press, used for double-press guarding."
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The button's label content." }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeButton", "declaration": { "name": "AcmeButton", "module": "src/acme-button.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-button", "declaration": { "name": "AcmeButton", "module": "src/acme-button.ts" } }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-alert.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A message calling attention to important, possibly time-sensitive information.",
+          "name": "AcmeAlert",
+          "customElement": true,
+          "tagName": "acme-alert",
+          "attributes": [
+            {
+              "name": "state",
+              "type": { "text": "'info' | 'success' | 'warning' | 'danger'" },
+              "default": "'info'",
+              "description": "The kind of message this alert carries."
+            },
+            {
+              "name": "dismissible",
+              "type": { "text": "boolean" },
+              "default": "false",
+              "description": "Shows a close control that lets the reader dismiss the alert."
+            }
+          ],
+          "events": [
+            {
+              "name": "dismiss",
+              "type": { "text": "CustomEvent<void>" },
+              "description": "Fires after the reader dismisses a dismissible alert."
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The alert's message content." },
+            { "name": "icon", "description": "Optional icon shown before the message." }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeAlert", "declaration": { "name": "AcmeAlert", "module": "src/acme-alert.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-alert", "declaration": { "name": "AcmeAlert", "module": "src/acme-alert.ts" } }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-text-field.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A labeled single-line text input.",
+          "name": "AcmeTextField",
+          "customElement": true,
+          "tagName": "acme-text-field",
+          "attributes": [
+            {
+              "name": "label",
+              "type": { "text": "string" },
+              "description": "The field's visible label. Required for an accessible name."
+            },
+            {
+              "name": "value",
+              "type": { "text": "string" },
+              "default": "''",
+              "description": "The current value."
+            },
+            {
+              "name": "placeholder",
+              "type": { "text": "string" },
+              "description": "Placeholder text shown when the field is empty."
+            },
+            {
+              "name": "invalid",
+              "type": { "text": "boolean" },
+              "default": "false",
+              "description": "Marks the field as failing validation."
+            },
+            {
+              "name": "error-text",
+              "type": { "text": "string" },
+              "description": "Message shown under the field when invalid is set."
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value",
+              "type": { "text": "string" },
+              "privacy": "public",
+              "description": "Reflects the current value; duplicates the value attribute."
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "privacy": "public",
+              "description": "Focuses the underlying input."
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": { "text": "CustomEvent<string>" },
+              "description": "Fires when the value commits (on blur or Enter)."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeTextField", "declaration": { "name": "AcmeTextField", "module": "src/acme-text-field.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-text-field", "declaration": { "name": "AcmeTextField", "module": "src/acme-text-field.ts" } }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-stack.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Lays out children in a row or column with a consistent gap between them.",
+          "name": "AcmeStack",
+          "customElement": true,
+          "tagName": "acme-stack",
+          "attributes": [
+            {
+              "name": "gap",
+              "type": { "text": "'xs' | 'sm' | 'md' | 'lg' | 'xl'" },
+              "default": "'md'",
+              "description": "Space between children, from the space scale."
+            },
+            {
+              "name": "direction",
+              "type": { "text": "'row' | 'column'" },
+              "default": "'column'",
+              "description": "Layout axis."
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The items to lay out." }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeStack", "declaration": { "name": "AcmeStack", "module": "src/acme-stack.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-stack", "declaration": { "name": "AcmeStack", "module": "src/acme-stack.ts" } }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-surface.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A container with padding and a background; the base building block for cards and panels.",
+          "name": "AcmeSurface",
+          "customElement": true,
+          "tagName": "acme-surface",
+          "attributes": [
+            {
+              "name": "elevation",
+              "type": { "text": "0 | 1 | 2" },
+              "default": "0",
+              "description": "Shadow depth: 0 is flush with the page, 2 is the most raised."
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The surface's content." }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeSurface", "declaration": { "name": "AcmeSurface", "module": "src/acme-surface.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-surface", "declaration": { "name": "AcmeSurface", "module": "src/acme-surface.ts" } }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-icon-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A button that renders only an icon and no visible text.",
+          "name": "AcmeIconButton",
+          "customElement": true,
+          "tagName": "acme-icon-button",
+          "attributes": [
+            {
+              "name": "label",
+              "type": { "text": "string" },
+              "description": "Accessible name for the button; required since there is no visible text."
+            },
+            {
+              "name": "icon",
+              "type": { "text": "string" },
+              "description": "Name of the icon to render, from the system's icon set."
+            }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeIconButton", "declaration": { "name": "AcmeIconButton", "module": "src/acme-icon-button.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-icon-button", "declaration": { "name": "AcmeIconButton", "module": "src/acme-icon-button.ts" } }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/acme-badge.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A small status indicator, usually shown next to a label or inside a list.",
+          "name": "AcmeBadge",
+          "customElement": true,
+          "tagName": "acme-badge",
+          "attributes": [
+            {
+              "name": "tone",
+              "type": { "text": "'neutral' | 'info' | 'success' | 'danger'" },
+              "default": "'neutral'",
+              "description": "Semantic emphasis."
+            }
+          ],
+          "slots": [
+            { "name": "", "description": "The badge's short label text." }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "AcmeBadge", "declaration": { "name": "AcmeBadge", "module": "src/acme-badge.ts" } },
+        { "kind": "custom-element-definition", "name": "acme-badge", "declaration": { "name": "AcmeBadge", "module": "src/acme-badge.ts" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: The lockfile must resolve from the public registry only
+        run: |
+          if grep -o '"resolved": "https\?://[^/"]*' package-lock.json | grep -v 'https://registry.npmjs.org' ; then
+            echo "package-lock.json references a non-public registry; regenerate it with --registry=https://registry.npmjs.org/" >&2
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: The shipped example must extract identically and pass doctor
+        run: |
+          npx tsx src/cli.ts extract
+          git diff --exit-code -- data
+          npx tsx src/cli.ts doctor
+      - name: The generated surface must build
+        run: npx tsx src/cli.ts generate all --system acme-elements --target /tmp/gen-check

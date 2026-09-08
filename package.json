@@ -1,0 +1,41 @@
+{
+  "name": "open-design-system-mcp-starter",
+  "version": "0.1.0",
+  "description": "System-agnostic MCP server template for design systems: agents ask for real components, props and tokens instead of guessing",
+  "scripts": {
+    "test": "tsx --test 'src/**/*.test.ts'",
+    "serve": "tsx src/cli.ts serve",
+    "extract": "tsx src/cli.ts extract",
+    "doctor": "tsx src/cli.ts doctor",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "check": "npm run typecheck && npm test",
+    "init": "tsx src/cli.ts init",
+    "generate": "tsx src/cli.ts generate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "react-docgen-typescript": "^2.4.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.1",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christophhdesign/open-design-system-mcp-starter.git"
+  },
+  "homepage": "https://github.com/christophhdesign/open-design-system-mcp-starter#readme",
+  "bugs": {
+    "url": "https://github.com/christophhdesign/open-design-system-mcp-starter/issues"
+  }
+}

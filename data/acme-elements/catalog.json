@@ -1,0 +1,348 @@
+{
+  "system": "acme-elements",
+  "generatedAt": "2026-09-04T13:06:25.318Z",
+  "source": {
+    "root": "examples/acme-elements",
+    "adapter": "custom-elements-manifest",
+    "srcHash": "036d0eaea214163141f5d044a8d3f6166133511d74e629aa9a0028d5b46dcae3"
+  },
+  "components": [
+    {
+      "dir": "src/acme-button.ts",
+      "exports": [
+        {
+          "displayName": "acme-button",
+          "tagName": "acme-button",
+          "description": "A clickable control that triggers an action.",
+          "props": [
+            {
+              "name": "variant",
+              "type": "'primary' | 'secondary' | 'ghost'",
+              "required": false,
+              "defaultValue": "'primary'",
+              "description": "Visual emphasis."
+            },
+            {
+              "name": "size",
+              "type": "'sm' | 'md' | 'lg'",
+              "required": false,
+              "defaultValue": "'md'",
+              "description": "Control size."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "required": false,
+              "defaultValue": "false",
+              "description": "Disables interaction and dims the control."
+            },
+            {
+              "name": "loading",
+              "type": "boolean",
+              "required": false,
+              "defaultValue": "false",
+              "description": "Shows a spinner in place of the label and disables interaction."
+            },
+            {
+              "name": "type",
+              "type": "'primary' | 'secondary'",
+              "required": false,
+              "description": "Old name for the emphasis axis.",
+              "deprecated": "Use variant instead."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The button's label content."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "src/acme-alert.ts",
+      "exports": [
+        {
+          "displayName": "acme-alert",
+          "tagName": "acme-alert",
+          "description": "A message calling attention to important, possibly time-sensitive information.",
+          "props": [
+            {
+              "name": "state",
+              "type": "'info' | 'success' | 'warning' | 'danger'",
+              "required": false,
+              "defaultValue": "'info'",
+              "description": "The kind of message this alert carries."
+            },
+            {
+              "name": "dismissible",
+              "type": "boolean",
+              "required": false,
+              "defaultValue": "false",
+              "description": "Shows a close control that lets the reader dismiss the alert."
+            }
+          ],
+          "events": [
+            {
+              "name": "dismiss",
+              "type": "CustomEvent<void>",
+              "description": "Fires after the reader dismisses a dismissible alert."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The alert's message content."
+            },
+            {
+              "name": "icon",
+              "description": "Optional icon shown before the message."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "src/acme-text-field.ts",
+      "exports": [
+        {
+          "displayName": "acme-text-field",
+          "tagName": "acme-text-field",
+          "description": "A labeled single-line text input.",
+          "props": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "The field's visible label. Required for an accessible name."
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "required": false,
+              "defaultValue": "''",
+              "description": "The current value."
+            },
+            {
+              "name": "placeholder",
+              "type": "string",
+              "required": false,
+              "description": "Placeholder text shown when the field is empty."
+            },
+            {
+              "name": "invalid",
+              "type": "boolean",
+              "required": false,
+              "defaultValue": "false",
+              "description": "Marks the field as failing validation."
+            },
+            {
+              "name": "error-text",
+              "type": "string",
+              "required": false,
+              "description": "Message shown under the field when invalid is set."
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": "CustomEvent<string>",
+              "description": "Fires when the value commits (on blur or Enter)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "src/acme-stack.ts",
+      "exports": [
+        {
+          "displayName": "acme-stack",
+          "tagName": "acme-stack",
+          "description": "Lays out children in a row or column with a consistent gap between them.",
+          "props": [
+            {
+              "name": "gap",
+              "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+              "required": false,
+              "defaultValue": "'md'",
+              "description": "Space between children, from the space scale."
+            },
+            {
+              "name": "direction",
+              "type": "'row' | 'column'",
+              "required": false,
+              "defaultValue": "'column'",
+              "description": "Layout axis."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The items to lay out."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "src/acme-surface.ts",
+      "exports": [
+        {
+          "displayName": "acme-surface",
+          "tagName": "acme-surface",
+          "description": "A container with padding and a background; the base building block for cards and panels.",
+          "props": [
+            {
+              "name": "elevation",
+              "type": "0 | 1 | 2",
+              "required": false,
+              "defaultValue": "0",
+              "description": "Shadow depth: 0 is flush with the page, 2 is the most raised."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The surface's content."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "src/acme-icon-button.ts",
+      "exports": [
+        {
+          "displayName": "acme-icon-button",
+          "tagName": "acme-icon-button",
+          "description": "A button that renders only an icon and no visible text.",
+          "props": [
+            {
+              "name": "label",
+              "type": "string",
+              "required": false,
+              "description": "Accessible name for the button; required since there is no visible text."
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "required": false,
+              "description": "Name of the icon to render, from the system's icon set."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dir": "src/acme-badge.ts",
+      "exports": [
+        {
+          "displayName": "acme-badge",
+          "tagName": "acme-badge",
+          "description": "A small status indicator, usually shown next to a label or inside a list.",
+          "props": [
+            {
+              "name": "tone",
+              "type": "'neutral' | 'info' | 'success' | 'danger'",
+              "required": false,
+              "defaultValue": "'neutral'",
+              "description": "Semantic emphasis."
+            }
+          ],
+          "slots": [
+            {
+              "name": "",
+              "description": "The badge's short label text."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "allExports": [
+    "AcmeAlert",
+    "AcmeBadge",
+    "AcmeButton",
+    "AcmeIconButton",
+    "AcmeStack",
+    "AcmeSurface",
+    "AcmeTextField",
+    "acme-alert",
+    "acme-badge",
+    "acme-button",
+    "acme-icon-button",
+    "acme-stack",
+    "acme-surface",
+    "acme-text-field"
+  ],
+  "allPropsByExport": {
+    "acme-button": [
+      "disabled",
+      "loading",
+      "size",
+      "type",
+      "variant"
+    ],
+    "AcmeButton": [
+      "disabled",
+      "loading",
+      "size",
+      "type",
+      "variant"
+    ],
+    "acme-alert": [
+      "dismissible",
+      "state"
+    ],
+    "AcmeAlert": [
+      "dismissible",
+      "state"
+    ],
+    "acme-text-field": [
+      "error-text",
+      "errorText",
+      "invalid",
+      "label",
+      "placeholder",
+      "value"
+    ],
+    "AcmeTextField": [
+      "error-text",
+      "errorText",
+      "invalid",
+      "label",
+      "placeholder",
+      "value"
+    ],
+    "acme-stack": [
+      "direction",
+      "gap"
+    ],
+    "AcmeStack": [
+      "direction",
+      "gap"
+    ],
+    "acme-surface": [
+      "elevation"
+    ],
+    "AcmeSurface": [
+      "elevation"
+    ],
+    "acme-icon-button": [
+      "icon",
+      "label"
+    ],
+    "AcmeIconButton": [
+      "icon",
+      "label"
+    ],
+    "acme-badge": [
+      "tone"
+    ],
+    "AcmeBadge": [
+      "tone"
+    ]
+  }
+}

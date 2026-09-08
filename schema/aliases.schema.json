@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ds-mcp-starter:schema:aliases",
+  "title": "AliasMap",
+  "description": "What agents call things vs what a system calls them. The team file (data/<id>/aliases.json) validates against this shape; team entries use \"source\": \"team\" and win over the ecosystem lexicon on the same alias.",
+  "type": "object",
+  "required": [
+    "components",
+    "props"
+  ],
+  "properties": {
+    "components": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AliasEntry"
+      }
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AliasEntry"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "AliasEntry": {
+      "type": "object",
+      "title": "AliasEntry",
+      "required": [
+        "alias"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "description": "The name an agent is likely to write ('Card', 'spacing')."
+        },
+        "concept": {
+          "type": "string",
+          "description": "The concept in plain words ('surface container', 'stack gap')."
+        },
+        "target": {
+          "type": "string",
+          "description": "The name THIS system uses, when the team has mapped it. Absent in the ecosystem lexicon."
+        },
+        "note": {
+          "type": "string"
+        },
+        "occurrences": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How often models invented this exact name in the mined evidence (lexicon entries only)."
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "lexicon",
+            "team"
+          ],
+          "description": "'lexicon': the ecosystem seed, mined and never hand-edited. 'team': this system's own alias file, wins on conflict. Optional in a team file: entries without it are treated as team entries when loaded."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

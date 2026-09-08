@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ds-mcp-starter:schema:ds-config",
+  "title": "DsConfig",
+  "description": "The systems registry (ds.config.json). Maps a system id to its configuration.",
+  "type": "object",
+  "required": ["systems"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional pointer to this schema file, for editor validation."
+    },
+    "systems": {
+      "type": "object",
+      "description": "One system = one consumable kit. A design system with a React kit and a web-component kit declares two systems.",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/SystemConfig" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "SystemConfig": {
+      "type": "object",
+      "title": "SystemConfig",
+      "description": "One system = one consumable kit. Every tool takes a `system` argument, optional when only one is configured.",
+      "required": ["catalog"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human name shown to agents, e.g. \"Acme Elements\". Defaults to the id."
+        },
+        "description": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string",
+          "description": "Checkout root the adapters read from. Relative paths resolve against the config file's directory."
+        },
+        "rootEnv": {
+          "type": "string",
+          "description": "Env var that overrides `root` (a CI checkout, a teammate's path)."
+        },
+        "dataDir": {
+          "type": "string",
+          "description": "Where generated ground truth lives. Default: data/<id>. Committed on purpose."
+        },
+        "componentModel": {
+          "type": "string",
+          "enum": ["react", "custom-elements"],
+          "description": "'react' (default): components are imported by name. 'custom-elements': registered once, written as dashed tags."
+        },
+        "componentsPkg": {
+          "type": "string",
+          "description": "The specifier consumers import (react) or register (custom-elements), e.g. \"@acme/react\"."
+        },
+        "foundationsPkg": {
+          "type": "string",
+          "description": "Tokens/foundations package, if separate."
+        },
+        "catalog": {
+          "$ref": "#/$defs/CatalogSource"
+        },
+        "tokens": {
+          "$ref": "#/$defs/TokensSource"
+        },
+        "docs": {
+          "type": "object",
+          "description": "Markdown docs to index, globs relative to root.",
+          "required": ["include"],
+          "properties": {
+            "include": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "exclude": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "aliases": {
+          "type": "string",
+          "description": "Team-maintained alias file, relative to the config dir. Default: <dataDir>/aliases.json if present."
+        }
+      },
+      "additionalProperties": false
+    },
+    "CatalogSource": {
+      "title": "CatalogSource",
+      "description": "Where the catalog comes from. Adapters are the only place format knowledge lives.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "An already-built catalog in this repo's SystemCatalog shape (or the bench's). Path relative to root.",
+          "required": ["adapter", "path"],
+          "properties": {
+            "adapter": { "const": "catalog-json" },
+            "path": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "A custom-elements.json (Custom Elements Manifest, schema 1.x or 2.x). Path relative to root.",
+          "required": ["adapter", "path"],
+          "properties": {
+            "adapter": { "const": "custom-elements-manifest" },
+            "path": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Reserved for react-docgen-typescript extraction from a source tree. Not implemented in P0: the adapter returns a clear error.",
+          "required": ["adapter", "src"],
+          "properties": {
+            "adapter": { "const": "react-docgen" },
+            "src": { "type": "string" },
+            "barrel": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "TokensSource": {
+      "title": "TokensSource",
+      "description": "Where tokens come from.",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "CSS files declaring custom properties, e.g. compiled tokens.css. Paths relative to root.",
+          "required": ["adapter", "files"],
+          "properties": {
+            "adapter": { "const": "css-vars" },
+            "files": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Design Tokens Community Group JSON (DTCG) files. Paths relative to root.",
+          "required": ["adapter", "files"],
+          "properties": {
+            "adapter": { "const": "dtcg" },
+            "files": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

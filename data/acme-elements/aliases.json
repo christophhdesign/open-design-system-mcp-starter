@@ -1,0 +1,16 @@
+{
+  "components": [
+    { "alias": "Card", "target": "acme-surface", "note": "This system calls a card a Surface.", "source": "team" },
+    { "alias": "Alert", "target": "acme-alert", "source": "team" },
+    { "alias": "TextField", "target": "acme-text-field", "source": "team" },
+    { "alias": "Button", "target": "acme-button", "source": "team" },
+    { "alias": "IconButton", "target": "acme-icon-button", "source": "team" },
+    { "alias": "Badge", "target": "acme-badge", "source": "team" },
+    { "alias": "Stack", "target": "acme-stack", "source": "team" }
+  ],
+  "props": [
+    { "alias": "spacing", "target": "gap", "note": "acme-stack uses gap, not spacing.", "source": "team" },
+    { "alias": "color", "target": "tone", "note": "Use the tone prop for semantic emphasis, not color.", "source": "team" },
+    { "alias": "severity", "target": "state", "note": "acme-alert uses state, not severity.", "source": "team" }
+  ]
+}

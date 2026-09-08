@@ -1,0 +1,173 @@
+{
+  "system": "acme-elements",
+  "generatedAt": "2026-09-04T08:18:28.457Z",
+  "chunks": [
+    {
+      "path": "docs/button.md",
+      "heading": "Button",
+      "trail": [
+        "Button"
+      ],
+      "text": "`acme-button` is a clickable control that triggers an action. Use it for the primary and\nsecondary actions on a page or inside a dialog.",
+      "mentions": [
+        "acme-button"
+      ]
+    },
+    {
+      "path": "docs/button.md",
+      "heading": "Variants",
+      "trail": [
+        "Button",
+        "Variants"
+      ],
+      "text": "`variant` is the emphasis axis: `primary` for the one action you want the reader to take,\n`secondary` for an alternative action, `ghost` for a low-emphasis action next to other\ncontrols.",
+      "mentions": []
+    },
+    {
+      "path": "docs/button.md",
+      "heading": "Sizes",
+      "trail": [
+        "Button",
+        "Sizes"
+      ],
+      "text": "`size` is `sm`, `md`, or `lg`. Match the size to the density of the surrounding UI; do not mix\nsizes in the same row of actions.",
+      "mentions": []
+    },
+    {
+      "path": "docs/button.md",
+      "heading": "States",
+      "trail": [
+        "Button",
+        "States"
+      ],
+      "text": "`disabled` removes the control from the tab order and dims it. `loading` keeps the control\nfocusable but replaces the label with a spinner and ignores clicks; use it while an action is\nin flight.",
+      "mentions": []
+    },
+    {
+      "path": "docs/button.md",
+      "heading": "Accessibility",
+      "trail": [
+        "Button",
+        "Accessibility"
+      ],
+      "text": "When `acme-button` wraps only an icon (no visible text), it needs an accessible name from the\nconsumer: set `aria-label` on the element. A button with visible text needs nothing extra; the\ntext content is its accessible name.",
+      "mentions": [
+        "acme-button"
+      ]
+    },
+    {
+      "path": "docs/button.md",
+      "heading": "Migration",
+      "trail": [
+        "Button",
+        "Migration"
+      ],
+      "text": "The `type` attribute is deprecated. It used to carry the same `primary` / `secondary` axis\nthat `variant` now carries. Replace `type=\"primary\"` with `variant=\"primary\"`, and\n`type=\"secondary\"` with `variant=\"secondary\"`.",
+      "mentions": []
+    },
+    {
+      "path": "docs/getting-started.md",
+      "heading": "Getting started with Acme Elements",
+      "trail": [
+        "Getting started with Acme Elements"
+      ],
+      "text": "Acme Elements is a small set of web components. Register the package once, then use the\nelements as plain HTML tags anywhere in your markup.",
+      "mentions": []
+    },
+    {
+      "path": "docs/getting-started.md",
+      "heading": "Install",
+      "trail": [
+        "Getting started with Acme Elements",
+        "Install"
+      ],
+      "text": "```html\n<script type=\"module\" src=\"https://example.invalid/@acme/elements/register.js\"></script>\n```",
+      "mentions": []
+    },
+    {
+      "path": "docs/getting-started.md",
+      "heading": "Use a component",
+      "trail": [
+        "Getting started with Acme Elements",
+        "Use a component"
+      ],
+      "text": "```html\n<acme-surface tone=\"brand\">\n  <acme-stack gap=\"md\">\n    <acme-alert state=\"success\">Saved.</acme-alert>\n    <acme-button variant=\"primary\">Continue</acme-button>\n  </acme-stack>\n</acme-surface>\n```",
+      "mentions": [
+        "acme-button",
+        "acme-alert",
+        "acme-stack",
+        "acme-surface"
+      ]
+    },
+    {
+      "path": "docs/getting-started.md",
+      "heading": "Naming",
+      "trail": [
+        "Getting started with Acme Elements",
+        "Naming"
+      ],
+      "text": "Every element tag starts with `acme-`. The class behind each element (for example\n`AcmeButton`) is exported for TypeScript users who want typed refs, but you never need to\nimport it just to render the tag.",
+      "mentions": []
+    },
+    {
+      "path": "docs/getting-started.md",
+      "heading": "Theming",
+      "trail": [
+        "Getting started with Acme Elements",
+        "Theming"
+      ],
+      "text": "Components read color from CSS custom properties, not hardcoded values. Load `tokens.css`\nonce; switch themes by setting `data-theme=\"dark\"` on `<html>` or any ancestor, or by leaving\nit unset to follow `prefers-color-scheme`.",
+      "mentions": []
+    },
+    {
+      "path": "docs/tokens.md",
+      "heading": "Tokens",
+      "trail": [
+        "Tokens"
+      ],
+      "text": "Acme Elements ships two layers of design tokens as CSS custom properties in `tokens.css`.",
+      "mentions": []
+    },
+    {
+      "path": "docs/tokens.md",
+      "heading": "Base layer",
+      "trail": [
+        "Tokens",
+        "Base layer"
+      ],
+      "text": "Raw values: the gray and brand color scale, a 4px space scale, radii, font sizes and\ndurations. Base tokens are named by scale position (`--acme-gray-900`, `--acme-space-4`), not\nby where they are used. Do not reference base tokens directly from component code or app code;\nthey exist so the semantic layer has something to point at.",
+      "mentions": []
+    },
+    {
+      "path": "docs/tokens.md",
+      "heading": "Semantic layer",
+      "trail": [
+        "Tokens",
+        "Semantic layer"
+      ],
+      "text": "Named by intent: `--acme-color-text-default`, `--acme-color-surface-sunken`,\n`--acme-color-accent-emphasis`. Semantic tokens reference base tokens with `var()`. This is\nthe layer to use everywhere: it is what changes between light and dark, so hardcoding a base\ncolor or a raw hex value breaks theming.",
+      "mentions": []
+    },
+    {
+      "path": "docs/tokens.md",
+      "heading": "Theming",
+      "trail": [
+        "Tokens",
+        "Theming"
+      ],
+      "text": "The semantic layer has a light value (the default, declared on `:root`) and a dark override,\napplied two ways: an explicit `[data-theme=\"dark\"]` attribute on any ancestor, or\n`prefers-color-scheme: dark` when no explicit theme is set. Set `data-theme=\"light\"` to opt an\nelement back out of the system preference.",
+      "mentions": []
+    },
+    {
+      "path": "docs/tokens.md",
+      "heading": "Common mistake",
+      "trail": [
+        "Tokens",
+        "Common mistake"
+      ],
+      "text": "Writing `color: #18222c` instead of `color: var(--acme-color-text-default)` reads correctly in\nlight mode and silently breaks in dark mode. If you catch yourself typing a hex value in\ncomponent styles, there is almost always a semantic token for it.",
+      "mentions": []
+    }
+  ],
+  "sourceHash": "c5f06324183d3d9ffecafe2da5b32f56b182430260812decc0c46abfde6e0484"
+}

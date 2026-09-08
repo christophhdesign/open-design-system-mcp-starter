@@ -1,0 +1,15 @@
+{
+  "$schema": "./schema/ds.config.schema.json",
+  "systems": {
+    "acme-elements": {
+      "name": "Acme Elements (example)",
+      "description": "Placeholder system shipped with the starter so the server runs out of the box. Replace with your own.",
+      "root": "examples/acme-elements",
+      "componentModel": "custom-elements",
+      "componentsPkg": "@acme/elements",
+      "catalog": { "adapter": "custom-elements-manifest", "path": "custom-elements.json" },
+      "tokens": { "adapter": "css-vars", "files": ["tokens.css"] },
+      "docs": { "include": ["docs/**/*.md"] }
+    }
+  }
+}

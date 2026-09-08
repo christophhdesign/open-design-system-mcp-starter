@@ -1,0 +1,11 @@
+node_modules/
+.npm-cache/
+.env
+.DS_Store
+# Generated per-system data is committed on purpose (it is the server's ground truth).
+# Scratch output from extract --out goes here:
+.out/
+
+# Internal planning documents: kept locally, not part of the published template.
+plan.html
+ROADMAP.html

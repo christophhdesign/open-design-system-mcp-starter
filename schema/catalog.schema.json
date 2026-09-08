@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ds-mcp-starter:schema:catalog",
+  "title": "SystemCatalog",
+  "description": "Generated ground truth for one system's public API. Adapters produce this shape; the server reads only this shape.",
+  "type": "object",
+  "required": ["system", "generatedAt", "source", "components", "allExports", "allPropsByExport"],
+  "properties": {
+    "system": {
+      "type": "string",
+      "description": "System id, matching a key in ds.config.json's systems map."
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "required": ["root"],
+      "properties": {
+        "root": { "type": "string" },
+        "commit": { "type": "string" },
+        "srcHash": { "type": "string" },
+        "adapter": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dir", "exports"],
+        "properties": {
+          "dir": { "type": "string" },
+          "exports": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/CatalogExport" }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "allExports": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Flat symbol list. This is the hallucination check set: a name not here does not exist."
+    },
+    "allPropsByExport": {
+      "type": "object",
+      "description": "Gradeable prop names per export, including attribute aliases (kebab and camel spellings for custom elements).",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "CatalogExport": {
+      "type": "object",
+      "title": "CatalogExport",
+      "required": ["displayName", "description", "props"],
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "Public symbol (react: PascalCase export; custom-elements: the dashed tag name)."
+        },
+        "tagName": {
+          "type": "string",
+          "description": "Custom elements only: the tag, when displayName is a class name."
+        },
+        "description": { "type": "string" },
+        "props": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CatalogProp" }
+        },
+        "inheritedProps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Names only, of props declared outside the system's own source (DOM attrs, style-system spreads)."
+        },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CatalogEvent" }
+        },
+        "slots": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CatalogSlot" }
+        },
+        "examples": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/CatalogExample" }
+        },
+        "a11y": {
+          "type": "object",
+          "properties": {
+            "accessibleName": {
+              "type": "string",
+              "enum": ["required", "recommended", "none"],
+              "description": "Does this component need an accessible name from the consumer?"
+            },
+            "notes": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "guidance": {
+          "type": "object",
+          "properties": {
+            "do": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "dont": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "notes": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "deprecated": {
+          "type": "object",
+          "properties": {
+            "since": { "type": "string" },
+            "replacement": { "type": "string" },
+            "note": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "docs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Markdown docs that mention this export, relative to root."
+        }
+      },
+      "additionalProperties": false
+    },
+    "CatalogProp": {
+      "type": "object",
+      "title": "CatalogProp",
+      "required": ["name", "type", "required"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "required": { "type": "boolean" },
+        "defaultValue": { "type": "string" },
+        "description": { "type": "string" },
+        "deprecated": {
+          "type": "string",
+          "description": "Present when the prop is deprecated; the string is the replacement or note."
+        }
+      },
+      "additionalProperties": false
+    },
+    "CatalogEvent": {
+      "type": "object",
+      "title": "CatalogEvent",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "CatalogSlot": {
+      "type": "object",
+      "title": "CatalogSlot",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "'' is the default slot."
+        },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "CatalogExample": {
+      "type": "object",
+      "title": "CatalogExample",
+      "required": ["code"],
+      "properties": {
+        "title": { "type": "string" },
+        "code": { "type": "string" },
+        "language": {
+          "type": "string",
+          "description": "'tsx' | 'html' | ... defaults to tsx for react, html for custom elements."
+        },
+        "source": {
+          "type": "string",
+          "description": "Where it came from (story id, doc path)."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
