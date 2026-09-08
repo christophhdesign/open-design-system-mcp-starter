@@ -128,13 +128,13 @@ Adapters are the only place format knowledge lives. Everything downstream (searc
 resources) reads the same `SystemCatalog` / `SystemTokens` shape regardless of which adapter
 produced it.
 
-| Adapter | Kind | Input | Status |
-| --- | --- | --- | --- |
-| `catalog-json` | catalog | An already-built catalog matching the `SystemCatalog` shape (path relative to `root`). | P0 |
-| `custom-elements-manifest` | catalog | A `custom-elements.json` (Custom Elements Manifest, schema 1.x or 2.x). | P0 |
-| `react-docgen` | catalog | A source tree (`src`) and an optional barrel file (`barrel`). | P1 |
-| `css-vars` | tokens | CSS files declaring custom properties, e.g. a compiled `tokens.css` (`files`, relative to `root`). | P0 |
-| `dtcg` | tokens | Design Tokens Community Group (DTCG) JSON files (`files`, relative to `root`). | P1 |
+| Adapter | Kind | Input |
+| --- | --- | --- |
+| `catalog-json` | catalog | An already-built catalog matching the `SystemCatalog` shape (path relative to `root`). |
+| `custom-elements-manifest` | catalog | A `custom-elements.json` (Custom Elements Manifest, schema 1.x or 2.x). |
+| `react-docgen` | catalog | A source tree (`src`) and an optional barrel file (`barrel`). |
+| `css-vars` | tokens | CSS files declaring custom properties, e.g. a compiled `tokens.css` (`files`, relative to `root`). |
+| `dtcg` | tokens | Design Tokens Community Group (DTCG) JSON files (`files`, relative to `root`). |
 
 ### react-docgen
 
@@ -474,25 +474,24 @@ specific prop (`Button` or `Button.type`), from three sources, in order:
 ## Tools
 
 Every tool returns a short text summary for the model plus a `structuredContent` object matching
-a type in `src/types.ts`. Core tools ship first. Nine tools ship as of P2, unchanged through P3.
+a type in `src/types.ts`. Nine tools ship:
 
-| Tool | Question it answers | Status |
-| --- | --- | --- |
-| `search_components` | "What do I use for a dismissible notice?" | P0 |
-| `get_component` | "What are Button's real props and values?" | P0 |
-| `resolve_component` | "Does TextField exist here?" | P0 |
-| `find_token` | "Which token is `#1a1a1a`, or 'muted text on a card'?" | P0 |
-| `list_tokens` | Lists tokens, filtered by category (color, space, size, typography, radius, shadow, motion, border, opacity, z-index) or a word; for browsing what's available rather than guessing a name. | P1 |
-| `get_guidance` | Gets written guidance from the system's own docs for a component or a question (e.g. "when not to use a modal", "how do I migrate off the deprecated variant prop"); returns the most relevant doc sections, ranked, or a plain note when no docs are indexed for the system. | P1 |
-| `check_usage` | Checks a JSX/TSX or HTML snippet against the design system before it's committed: unknown components, invented props, raw colors and lengths, missing accessible names, disallowed imports, deprecated API. Meant to be called on every file a build task writes. | P2 |
-| `get_pattern` | "How does this system compose a labeled field with an error?" Gets a complete, correct recipe composed from real components for a common UI need, in preference to composing from scratch. | P2 |
-| `get_migration` | "Button's `type` prop is deprecated, what now?" Deprecation and migration info for a component or `Component.prop`: the catalog's own `deprecated` field, matching CHANGELOG entries, and any codemod that can automate the change. | P2 |
+| Tool | Question it answers |
+| --- | --- |
+| `search_components` | "What do I use for a dismissible notice?" |
+| `get_component` | "What are Button's real props and values?" |
+| `resolve_component` | "Does TextField exist here?" |
+| `find_token` | "Which token is `#1a1a1a`, or 'muted text on a card'?" |
+| `list_tokens` | Lists tokens, filtered by category (color, space, size, typography, radius, shadow, motion, border, opacity, z-index) or a word; for browsing what's available rather than guessing a name. |
+| `get_guidance` | Gets written guidance from the system's own docs for a component or a question (e.g. "when not to use a modal", "how do I migrate off the deprecated variant prop"); returns the most relevant doc sections, ranked, or a plain note when no docs are indexed for the system. |
+| `check_usage` | Checks a JSX/TSX or HTML snippet against the design system before it's committed: unknown components, invented props, raw colors and lengths, missing accessible names, disallowed imports, deprecated API. Meant to be called on every file a build task writes. |
+| `get_pattern` | "How does this system compose a labeled field with an error?" Gets a complete, correct recipe composed from real components for a common UI need, in preference to composing from scratch. |
+| `get_migration` | "Button's `type` prop is deprecated, what now?" Deprecation and migration info for a component or `Component.prop`: the catalog's own `deprecated` field, matching CHANGELOG entries, and any codemod that can automate the change. |
 
 No `get_figma_mapping` tool is planned: "which code component is this Figma node" is exactly what
-Figma's own MCP server already answers, with live property values from an open file; this
-starter's job is the catalog and validation side, which is why P3 added the Code Connect adapter
-(feeding node links and aliases into the tools above) instead of a tenth tool that would duplicate
-Figma's own.
+Figma's own MCP server already answers, with live property values from an open file. This starter's
+job is the catalog and validation side, which is why the Code Connect adapter feeds node links and
+aliases into the tools above instead of adding a tenth tool that would duplicate Figma's own.
 
 ### Resources and prompts
 
@@ -708,30 +707,8 @@ under it. Keep `typescript@^5` as the installed package, or if you need TypeScri
 your workflow, install `typescript@5` as a nested dependency of `react-docgen-typescript` instead
 of upgrading the top-level package.
 
-## Roadmap
+## Later
 
-- **P0, walking skeleton.** Config, data loading, the `catalog-json`, `custom-elements-manifest`
-  and `css-vars` adapters, the four core tools, catalog/tokens resources, the example system, and
-  this README. Exit: a fresh clone runs `npm install` and `npm run serve`, and an agent asking for
-  a nonexistent component gets a correction instead of writing it.
-- **P1, real systems. Done.** The `react-docgen` and `dtcg` adapters, the `markdown-docs` adapter
-  with `get_guidance`, `list_tokens`, and an `init` wizard all ship. Exit: two structurally
-  different real systems (a React kit and a web-component kit) can be served from the same code
-  with zero per-system branches.
-- **P2, validation and surface. Done.** `check_usage` with a small static analyzer, `get_pattern`
-  and authored patterns, `get_migration` (catalog deprecations, CHANGELOG, codemods), the
-  `generate` command (`agents-md`, `llms-txt`, `skill`, `editor-rules`, `well-known`, `all`), npm
-  consumption for the `react-docgen` and `markdown-docs` adapters, and the `ds-mcp-setup` skill.
-  Exit: a team that has never seen the repo follows the setup skill end to end and ships a server
-  plus AGENTS.md, llms.txt and a skill without hand-editing any of them.
-- **P3, team scale. Done.** Streamable HTTP transport for a shared instance (`serve --http`, token
-  auth, `/healthz`), `init --package` for npm-only systems, a hand-written catalog overlay
-  (`overlay-scaffold`, `data/<id>/overlay.json`) for what docgen still cannot document, the
-  react-docgen adapter's props-type fallback, and a Figma Code Connect adapter that feeds node
-  links, examples and aliases into the existing catalog and alias data rather than adding a tenth
-  tool. Exit: the studio's own systems run on one shared instance and at least one external team
-  has adopted the template.
-
-**Later: pairing with a benchmark.** The catalog and token contracts here are a superset of what
+Pairing with a benchmark. The catalog and token contracts here are a superset of what
 open-design-system-bench extracts, so its output loads through the `catalog-json` adapter with no
-conversion. Nothing in P0 to P3 depends on this; see `docs/bench-pairing.md` for the full note.
+conversion. The starter does not depend on this; see `docs/bench-pairing.md` for the full note.

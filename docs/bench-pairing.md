@@ -1,6 +1,6 @@
 # Pairing with a benchmark
 
-Kept in mind, not built. Nothing in phases P0 to P3 depends on this.
+Kept in mind, not built. The starter does not depend on this.
 
 open-design-system-mcp-starter has no code dependency on any benchmark project. The pairing
 described here is possible only because the contracts happen to line up, not because either

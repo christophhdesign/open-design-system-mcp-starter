@@ -32,7 +32,7 @@ export interface ExtractResult {
 
 function unimplementedAdapterError(adapter: string): Error {
   return new Error(
-    `adapter '${adapter}' is not implemented yet (planned for P1). ` +
+    `adapter '${adapter}' is not implemented. ` +
       `Use 'catalog-json' or 'custom-elements-manifest' for the catalog, or 'css-vars' for tokens.`
   );
 }

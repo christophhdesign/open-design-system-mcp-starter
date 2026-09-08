@@ -9,41 +9,41 @@ code dependency on any other project.
 README.md is the adopter-facing reference and CHANGELOG.md tracks what shipped. This file is conventions and
 context, not a substitute for it.
 
-## What exists after P3
+## What exists
 
-- `src/types.ts`: every shared contract (written already; treat as the seam between adapters and
-  the server). **P3** adds `SystemConfig.codeConnect` (`{ include, root? }`), `CatalogExport.figma`
-  and `CatalogExport.docSource` (`'docgen' | 'props-type' | 'overlay' | 'code-connect'`),
+- `src/types.ts`: every shared contract (treat as the seam between adapters and the server).
+  Includes `SystemConfig.codeConnect` (`{ include, root? }`), `CatalogExport.figma` and
+  `CatalogExport.docSource` (`'docgen' | 'props-type' | 'overlay' | 'code-connect'`),
   `SystemCatalog.source.overlay` / `source.codeConnect`, `CatalogOverlay`, and `AliasEntry.source`
-  gaining `'code-connect'` alongside `'lexicon'` and `'team'`.
+  of `'lexicon' | 'team' | 'code-connect'`.
 - `src/config.ts`: loads `ds.config.json`, resolves roots and data dirs (including `rootEnv`
   overrides).
 - `src/data/load.ts`: validates, stamps and loads catalog/tokens/docs per system, plus
-  `patterns/*.md` (`loadPatterns` / `parsePatternFile`, P2): optional front matter (`title`,
+  `patterns/*.md` (`loadPatterns` / `parsePatternFile`): optional front matter (`title`,
   `description`, `tags`, `language`) between `---` lines, falling back to the first H1, first
   paragraph and first fenced code block; which catalog exports a pattern uses is detected from
   JSX/dashed tags found in its code, not authored by hand. `data.patterns` is `undefined` when a
-  system has no `patterns/` directory, `[]` when the directory exists but is empty. **P3:**
+  system has no `patterns/` directory, `[]` when the directory exists but is empty.
   `loadSystemData` also applies `data/<id>/overlay.json` (via `applyOverlay`) over the freshly read
-  catalog before anything downstream sees it, and `checkFreshness` gained a fourth dimension,
-  `codeConnect`, computed the same stale/fresh/none/unknown way as catalog/tokens/docs; also
-  `overlayReport` (used by `doctor`) for the touched/unknown summary.
-- `src/data/overlay.ts` (P3): `loadOverlay`/`applyOverlay` merge `data/<id>/overlay.json` over an
+  catalog before anything downstream sees it. `checkFreshness` reports four dimensions (catalog,
+  tokens, docs, `codeConnect`) as stale/fresh/none/unknown; `overlayReport` (used by `doctor`) is
+  the touched/unknown summary.
+- `src/data/overlay.ts`: `loadOverlay`/`applyOverlay` merge `data/<id>/overlay.json` over an
   already-extracted catalog, per export, by `displayName`; a name not in `allExports` is refused
   into an `unknown` list rather than invented as a new export. `props` merges by prop name (overlay
   wins on collision, other extracted props survive); every other field is a plain overwrite when
   set. Also `scaffoldOverlay`/`writeOverlayScaffold`, which back the `overlay-scaffold` CLI command:
   one empty entry with a `_note` per name `undocumentedValueExports` reports, appending only new
   names on a re-run unless `--force`.
-- `src/data/undocumented.ts` (P3): `undocumentedValueExports`, the one shared filter (PascalCase,
+- `src/data/undocumented.ts`: `undocumentedValueExports`, the one shared filter (PascalCase,
   empty `allPropsByExport` entry, no `CatalogExport`, not a `...Props`/`...Variant`/etc.-suffixed
   type name) used by both `overlay-scaffold` and `doctor`'s "N exports have no props table" note.
 - `src/data/aliases.ts`: merges the ecosystem lexicon (`src/data/convention-lexicon.json`), an
-  optional `data/<id>/aliases.code-connect.json` (**P3**, written by `runExtract` from Figma enum
-  maps), and a team's `data/<id>/aliases.json`, in that precedence: team wins over code-connect
-  wins over the lexicon on the same alias.
-- `src/adapters/`: the only place format knowledge lives. P0 shipped `catalog-json.ts`,
-  `custom-elements-manifest.ts`, `css-vars-tokens.ts`. P1 adds:
+  optional `data/<id>/aliases.code-connect.json` (written by `runExtract` from Figma enum maps),
+  and a team's `data/<id>/aliases.json`, in that precedence: team wins over code-connect wins over
+  the lexicon on the same alias.
+- `src/adapters/`: the only place format knowledge lives.
+  - `catalog-json.ts`, `custom-elements-manifest.ts`, `css-vars-tokens.ts`.
   - `react-docgen.ts`: the public API is whatever the barrel exports (named re-exports,
     `export *` followed recursively through nested barrels up to 6 hops, local `export
     const/function/class`), independent of what `react-docgen-typescript` can document. A barrel
@@ -52,22 +52,21 @@ context, not a substitute for it.
     Props come from `react-docgen-typescript`; a prop declared outside the system's own source
     (DOM attrs, a third-party base component) is recorded by name only, under `inheritedProps`. A
     tsconfig compiler option this project's pinned TypeScript doesn't recognize is warned about
-    and skipped rather than a hard failure. **P2:** a system consumed from npm has no `.tsx`
-    source, only `.d.ts` files, so the barrel resolution falls back to `index.d.ts` and the file
-    walk reads `.d.ts` alongside `.tsx`; when a barrel re-exports components (always true for a
-    published package's `dist/index.d.ts`), the component's own declaration file wins over the
-    barrel's re-export (deepest file path, then more props, decides which doc survives). **P3, the
-    props-type fallback:** for every barrel export docgen still left with zero props (a callable
-    object shape, a props type that is an intersection with a union -- both outside
-    `react-docgen-typescript`'s name/shape detection), `applyPropsTypeFallback` builds one
-    `ts.Program` over the declaring files and resolves `<Name>Props`/`<Name>BaseProps`, or failing
-    that the first parameter type of the export's call signature, through the checker directly.
-    Stamps `docSource: 'props-type'`; a resolved prop declared outside the system's own source is
-    still recorded name-only under `inheritedProps`, exactly like docgen. Never throws: a
-    `ts.createProgram` failure or one export's resolution failing just leaves it exactly as docgen
-    left it. `extract` prints `[extract] props-type fallback documented N of M undocumented
-    exports`.
-  - `code-connect.ts` (P3): parses `figma.connect(Component, url, { props, example })` calls out of
+    and skipped rather than a hard failure. A system consumed from npm has no `.tsx` source, only
+    `.d.ts` files, so the barrel resolution falls back to `index.d.ts` and the file walk reads
+    `.d.ts` alongside `.tsx`; when a barrel re-exports components (always true for a published
+    package's `dist/index.d.ts`), the component's own declaration file wins over the barrel's
+    re-export (deepest file path, then more props, decides which doc survives). Props-type
+    fallback: for every barrel export docgen still left with zero props (a callable object shape,
+    a props type that is an intersection with a union -- both outside `react-docgen-typescript`'s
+    name/shape detection), `applyPropsTypeFallback` builds one `ts.Program` over the declaring
+    files and resolves `<Name>Props`/`<Name>BaseProps`, or failing that the first parameter type of
+    the export's call signature, through the checker directly. Stamps `docSource: 'props-type'`; a
+    resolved prop declared outside the system's own source is still recorded name-only under
+    `inheritedProps`, exactly like docgen. Never throws: a `ts.createProgram` failure or one
+    export's resolution failing just leaves it exactly as docgen left it. `extract` prints
+    `[extract] props-type fallback documented N of M undocumented exports`.
+  - `code-connect.ts`: parses `figma.connect(Component, url, { props, example })` calls out of
     `*.figma.tsx`/`*.figma.ts` files (a team-hand-written file, never generated here, so a call or a
     whole file that doesn't match the expected shape is skipped, never aborts the run).
     `enrichFromCodeConnect` merges the parsed mappings over the catalog by component name (matched
@@ -85,58 +84,56 @@ context, not a substitute for it.
     per-file theme detection (light/dark/high-contrast) by basename when multiple files are given.
   - `markdown-docs.ts`: `docs.include`/`docs.exclude` globs chunked by heading into
     `docs-index.json` (1200-char chunks, each recording which catalog exports it mentions). The
-    glob walker skips `node_modules` and dot-directories; **P2:** an `include` entry with no glob
+    glob walker skips `node_modules` and dot-directories; an `include` entry with no glob
     characters is read as a literal path instead, bypassing that skip, so a README shipped inside
     an installed package is still reachable.
-  - `css-vars-tokens.ts`: **P2** taught the brace-aware CSS walker two more wrapper forms:
-    Tailwind 4's `@theme { ... }` block (treated as default-theme `:root` declarations) and
-    `@layer x { ... }` (unwrapped and recursed into). A brace-less at-rule immediately before a
-    block (`@import "./x.css";`, `@custom-variant dark (...);`) is stripped from that block's
-    header instead of being read as part of the next selector, which would otherwise mislabel the
-    block's theme.
+  - `css-vars-tokens.ts`: the brace-aware CSS walker also handles Tailwind 4's `@theme { ... }`
+    block (treated as default-theme `:root` declarations) and `@layer x { ... }` (unwrapped and
+    recursed into). A brace-less at-rule immediately before a block (`@import "./x.css";`,
+    `@custom-variant dark (...);`) is stripped from that block's header instead of being read as
+    part of the next selector, which would otherwise mislabel the block's theme.
 - `src/search/index.ts`: scoring across exact name, alias, prop, description and docs matches,
-  plus `searchPatterns` (P2) for `get_pattern`.
-- `src/check/analyze.ts` (P2): `checkUsage`, the static usage checker behind `check_usage`. Parses
+  plus `searchPatterns` for `get_pattern`.
+- `src/check/analyze.ts`: `checkUsage`, the static usage checker behind `check_usage`. Parses
   TSX with the TypeScript compiler API (same `^5` pin as `react-docgen.ts`) or a small regex tag
   scanner for HTML, both filling one shared element/attribute model so every check (unknown
   component, invented prop, raw color/length, missing accessible name, disallowed import,
   deprecated API) runs once, independent of source language.
-- `src/tools/`: one file per tool, a pure function over loaded data plus a thin MCP wrapper. P0
-  shipped `search_components`, `get_component`, `resolve_component`, `find_token`. P1 adds
-  `get_guidance` (docs search by topic/component, with a plain note when no docs are indexed) and
-  `list_tokens` (browse by category or word, as opposed to `find_token`'s single-value lookup). P2
-  adds `check_usage` (wraps `checkUsage`), `get_pattern` (wraps `searchPatterns`, with a plain note
-  when a system has no patterns yet), and `get_migration` (a component's or `Component.prop`'s
-  catalog `deprecated` field, then `CHANGELOG*.md` mentions at the system root, then a
-  `codemods`/`scripts/codemods` directory listing). Nine tools total.
+- `src/tools/`: one file per tool, a pure function over loaded data plus a thin MCP wrapper. Nine
+  tools: `search_components`, `get_component`, `resolve_component`, `find_token`, `get_guidance`
+  (docs search by topic/component, with a plain note when no docs are indexed), `list_tokens`
+  (browse by category or word, as opposed to `find_token`'s single-value lookup), `check_usage`
+  (wraps `checkUsage`), `get_pattern` (wraps `searchPatterns`, with a plain note when a system has
+  no patterns yet), and `get_migration` (a component's or `Component.prop`'s catalog `deprecated`
+  field, then `CHANGELOG*.md` mentions at the system root, then a `codemods`/`scripts/codemods`
+  directory listing).
 - `src/resources.ts`, `src/prompts.ts`: the `ds://<system>/...` resources and the `build-ui`
   prompt.
 - `src/server.ts`: `createServer()`, which registers tools, resources and prompts; the stdio entry
   point.
-- `src/generate/` (P2): writes the agent-facing surface for one already-loaded system into an
-  adopting team's repo. `index.ts` is the orchestrator (`runGenerate`, dispatching on
-  `GenerateTarget`); `shared.ts` holds everything every generator reuses and nothing else does --
-  the fixed 8-step routine text tied to exact tool names, the consumption-line sentence, derived
-  team-alias rows and do/don't lines pulled from the real catalog (never a placeholder), and the
-  two file-write idioms: `writeMarkedFile` (replace only the text between
-  `<!-- ds-mcp:begin <id> -->` / `<!-- ds-mcp:end <id> -->`, used by `agents-md.ts` for
-  AGENTS.md/CLAUDE.md and `editor-rules.ts` for copilot-instructions.md) and `writeGenerated`
-  (a fully-generated file, skipped when one already sits at that path unless it carries the
-  embedded `GENERATED_SIGNATURE` or `--force` is passed, used by `llms-txt.ts`, `skill.ts`,
-  `editor-rules.ts`'s `.mdc`, and `well-known.ts`).
-- `src/cli.ts`: commands `init`, `serve`, `extract`, `doctor`, `generate` (P2), `overlay-scaffold`
-  (P3). `init` (`src/init/wizard.ts` + `src/init/detect.ts`) scans a checkout, detects a
+- `src/generate/`: writes the agent-facing surface for one already-loaded system into an adopting
+  team's repo. `index.ts` is the orchestrator (`runGenerate`, dispatching on `GenerateTarget`);
+  `shared.ts` holds everything every generator reuses and nothing else does -- the fixed 8-step
+  routine text tied to exact tool names, the consumption-line sentence, derived team-alias rows and
+  do/don't lines pulled from the real catalog (never a placeholder), and the two file-write idioms:
+  `writeMarkedFile` (replace only the text between `<!-- ds-mcp:begin <id> -->` /
+  `<!-- ds-mcp:end <id> -->`, used by `agents-md.ts` for AGENTS.md/CLAUDE.md and `editor-rules.ts`
+  for copilot-instructions.md) and `writeGenerated` (a fully-generated file, skipped when one
+  already sits at that path unless it carries the embedded `GENERATED_SIGNATURE` or `--force` is
+  passed, used by `llms-txt.ts`, `skill.ts`, `editor-rules.ts`'s `.mdc`, and `well-known.ts`).
+- `src/cli.ts`: commands `init`, `serve`, `extract`, `doctor`, `generate`, `overlay-scaffold`.
+  `init` (`src/init/wizard.ts` + `src/init/detect.ts`) scans a checkout, detects a
   catalog/tokens/docs shape, and writes a system entry to `ds.config.json`; interactive by default,
-  non-interactive with `--id` and `--root`, or **P3:** `--id` and `--package <npm name>
-  [--foundations <npm name>]` for a system that is only ever installed (`detectPackage` reads
+  non-interactive with `--id` and `--root`, or `--id` and `--package <npm name> [--foundations
+  <npm name>]` for a system that is only ever installed (`detectPackage` reads
   `node_modules/<package>/package.json` instead of scanning a checkout; `root` is stored as `"."`).
-  `serve` **P3:** takes `--http [--port] [--host] [--path]` to start `src/http.ts`'s streamable-HTTP
+  `serve` takes `--http [--port] [--host] [--path]` to start `src/http.ts`'s streamable-HTTP
   transport instead of stdio; `overlay-scaffold --system <id> [--force]` wraps
   `writeOverlayScaffold`. `generate <agents-md|llms-txt|skill|editor-rules|well-known|all>
   --system <id> --target <dir> [--force] [--server-url <url>]` resolves a system from the registry
   and calls `runGenerate`; the USAGE string in `src/cli.ts` is authoritative for every command and
   flag.
-- `src/http.ts` (P3): the streamable-HTTP transport, a plain `node:http` server (no framework,
+- `src/http.ts`: the streamable-HTTP transport, a plain `node:http` server (no framework,
   deliberately no CORS -- it serves agent clients, not browsers). Sessions are stateful: an
   `initialize` POST with no `mcp-session-id` header spins up a fresh `McpServer` + transport pair
   keyed by the transport's generated session id; later POST/GET/DELETE requests for that session
@@ -147,10 +144,10 @@ context, not a substitute for it.
   catalog/tokens/docs freshness, plus live session count. `cli.ts serve` wires `--http` to
   `startHttp`.
 - Freshness (`checkFreshness` in `src/data/load.ts`, surfaced by `doctor` and `serve --strict`)
-  covers four artifacts: catalog, tokens, docs and (**P3**) `codeConnect`, each getting its own
+  covers four artifacts: catalog, tokens, docs and `codeConnect`, each getting its own
   stale/fresh/none/unknown report; `currentSourceHashes` (`src/adapters/index.ts`) recomputes the
   Code Connect hash the same way `runExtract` does, without re-parsing the mapping files' meaning.
-- `.claude/skills/ds-mcp-setup/` (P2): the shipped onboarding skill. Walks a setup session through
+- `.claude/skills/ds-mcp-setup/`: the shipped onboarding skill. Walks a setup session through
   `init`, `extract`, `doctor`, a server smoke test, `generate all`, registering the server with a
   client, and authoring `aliases.json` from a first real agent session's mistakes -- each step
   names a concrete check, not "looks fine." `generate skill` (above) writes two more skills,
@@ -205,8 +202,8 @@ curl -s http://127.0.0.1:3399/healthz; kill %1
   extract mechanically. Patterns and guidance are optional directories with a schema and examples;
   the setup skill offers to draft them.
 - **One system per kit, stdio first, HTTP for the shared instance.** Multi-kit systems declare one
-  system per kit. Local stdio is the P0 transport and stays the default; `serve --http` (P3) adds
-  streamable HTTP as an alternative for a team-shared instance, not a replacement.
+  system per kit. Local stdio is the default transport; `serve --http` adds streamable HTTP as an
+  alternative for a team-shared instance, not a replacement.
 - **No Figma lookup tool: Figma's MCP owns node-to-code, we own catalog and validation.** "Which
   code component is this Figma node, with today's live property values" is exactly what Figma's
   own MCP server already answers from an open file. Adding a `get_figma_mapping` tool here would
@@ -245,28 +242,28 @@ schema/                     JSON schemas: ds.config, catalog, tokens, aliases
 examples/acme-elements/     tiny example system: custom-elements.json, tokens.css, docs/*.md
 data/<system>/              committed ground truth per system (generated by extract)
   catalog.json  tokens.json  docs-index.json  aliases.json
-  overlay.json                 hand-written facts merged over the catalog at load time (P3)
-  aliases.code-connect.json    generated by extract from Figma enum maps, not hand-maintained (P3)
+  overlay.json                 hand-written facts merged over the catalog at load time
+  aliases.code-connect.json    generated by extract from Figma enum maps, not hand-maintained
   patterns/*.md               optional authored recipes (front matter + body fallbacks)
 src/
   types.ts                  every shared contract
   config.ts                 load ds.config.json, resolve roots and data dirs
   cli.ts                    init | serve | extract | doctor | generate | overlay-scaffold
   server.ts                 createServer(): registers tools, resources, prompts; stdio entry
-  http.ts                   streamable-HTTP transport: sessions, bearer auth, GET /healthz (P3)
+  http.ts                   streamable-HTTP transport: sessions, bearer auth, GET /healthz
   init/                     the `init` wizard
     detect.ts                 scans a checkout: manifests, react src + barrel, css/dtcg token
-                               files, docs globs, package name, component model; detectPackage (P3)
+                               files, docs globs, package name, component model; detectPackage
                                reads an installed package's own node_modules/<pkg> instead
     wizard.ts                 interactive or non-interactive answers -> ds.config.json entry;
-                               package mode (P3) when `answers.package` is set
+                               package mode when `answers.package` is set
   data/                     load + validate + freshness; lexicon, alias merge, patterns parsing
     convention-lexicon.json    empirical alias seed (do not hand-edit)
-    overlay.ts                 applyOverlay, scaffoldOverlay, writeOverlayScaffold (P3)
-    undocumented.ts            undocumentedValueExports: shared by overlay.ts and doctor (P3)
+    overlay.ts                 applyOverlay, scaffoldOverlay, writeOverlayScaffold
+    undocumented.ts            undocumentedValueExports: shared by overlay.ts and doctor
   adapters/                 the only place format knowledge lives
     catalog-json.ts  custom-elements-manifest.ts  react-docgen.ts
-    css-vars-tokens.ts  dtcg-tokens.ts  markdown-docs.ts  code-connect.ts (P3)
+    css-vars-tokens.ts  dtcg-tokens.ts  markdown-docs.ts  code-connect.ts
   search/                   scoring: exact, alias, prop, description, docs; searchPatterns
   check/
     analyze.ts                checkUsage: the static analyzer behind check_usage
@@ -286,4 +283,4 @@ docs/
   bench-pairing.md          the later note: how this pairs with a benchmark
 ```
 
-For what exists and what is planned, read README.md (Roadmap section) and CHANGELOG.md.
+For the adopter-facing reference, read README.md. CHANGELOG.md tracks what shipped.

@@ -22,7 +22,7 @@ async function connected() {
   return { client, server, registry };
 }
 
-test('listTools returns exactly the nine P0/P1/P2 tools', async () => {
+test('listTools returns exactly the nine tools', async () => {
   const { client } = await connected();
   const { tools } = await client.listTools();
   const names = tools.map((t) => t.name).sort();

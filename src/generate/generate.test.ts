@@ -186,7 +186,7 @@ test('well-known: servers.json is valid JSON and carries the server command', ()
   assert.equal(server.transport.type, 'stdio');
   assert.equal(server.transport.command, 'npx');
   assert.deepEqual(server.transport.args, ['tsx', '/abs/src/cli.ts', 'serve', '--config', '/abs/ds.config.json']);
-  assert.ok(result.notes.some((n) => n.includes('P3')));
+  assert.ok(result.notes.some((n) => n.includes('streamable-http')));
 });
 
 test('well-known: adds a streamable-http url when serverUrl is given', () => {

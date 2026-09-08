@@ -57,7 +57,7 @@ export type CatalogSource =
   | { adapter: 'catalog-json'; path: string }
   /** A custom-elements.json (Custom Elements Manifest, schema 1.x or 2.x). Path relative to root. */
   | { adapter: 'custom-elements-manifest'; path: string }
-  /** Reserved for react-docgen-typescript extraction from a source tree. Not implemented in P0: the adapter returns a clear error. */
+  /** react-docgen-typescript extraction from a source tree (`src`) and an optional barrel file. */
   | { adapter: 'react-docgen'; src: string; barrel?: string };
 
 export type TokensSource =
@@ -312,7 +312,7 @@ export interface SystemRegistry {
 }
 
 // ---------------------------------------------------------------------------
-// P2: patterns, usage checks
+// Patterns and usage checks
 // ---------------------------------------------------------------------------
 
 /** A small, complete, authored recipe composed from real components (data/<id>/patterns/*.md). */
@@ -361,7 +361,7 @@ export interface UsageReport {
 }
 
 // ---------------------------------------------------------------------------
-// P3: catalog overlay
+// Catalog overlay
 // ---------------------------------------------------------------------------
 
 /**
